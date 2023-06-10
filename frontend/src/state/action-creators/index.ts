@@ -75,7 +75,12 @@ export const logout = () => async (dispatch: Dispatch<Action>) => {
 };
 
 
-export const signUp = (email: string, password: string) => async (dispatch: Dispatch<Action>) => {
+export const signUp = (
+    firstName: string,
+    lastName: string,
+    email: string,
+    password: string
+) => async (dispatch: Dispatch<Action>) => {
     const response = await fetch('/api/auth/signup', {
         method: 'POST',
         headers: {
@@ -91,10 +96,11 @@ export const signUp = (email: string, password: string) => async (dispatch: Disp
         const data = await response.json();
         const setUserAction: SetUserAction = {
             type: ActionTypes.SET_USER,
-            payload: data
-        }
+            payload: data,
+        };
 
-        return dispatch(setUserAction);
+        dispatch(setUserAction); // Dispatch the action directly
+        return setUserAction; // Return the action object
 
     } else if (response.status < 500) {
         const data = await response.json();
@@ -102,6 +108,6 @@ export const signUp = (email: string, password: string) => async (dispatch: Disp
             return data.errors;
         }
     } else {
-        return ['An error occurred. Please try again.']
+        return ['An error occurred. Please try again.'];
     }
-}
+};

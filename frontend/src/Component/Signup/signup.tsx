@@ -1,8 +1,42 @@
-import React from 'react';
+import React, {useState} from 'react';
 import { Container, Row, Col, Form, Button } from 'react-bootstrap';
 import './signup.css';
+import {useDispatch} from "react-redux";
+import {bindActionCreators} from "@reduxjs/toolkit";
+import {actionCreators, State} from '../../state/index';
+
+
 
 export default function SignupPage() {
+
+    const dispatch = useDispatch();
+    const { login, logout, authenticate, signUp } = bindActionCreators(actionCreators, dispatch)
+    const [firstName, setFirstName] = useState<string>('');
+    const [lastName, setLastName] = useState<string>('');
+    const [emailAddress, setEmailAddress] = useState<string>('');
+    const [password, setPassword] = useState<string>('');
+    const [confirmPassword, setConfirmPassword] = useState<string>('');
+    const [errors, setErrors] = useState<string[]>([]);
+
+    const onSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+        event.preventDefault();
+        let errors: string[] = [];
+        if (password !== confirmPassword) {
+            errors.push('Passwords do not match');
+        }
+        if (!firstName || !lastName || !emailAddress || !password || !confirmPassword) {
+            errors.push("Please fill out all fields");
+        }
+
+        if (errors.length) {
+            setErrors(errors);
+            return null;
+        }
+
+        await dispatch(signUp(firstName, lastName, emailAddress, password)(dispatch));
+    }
+
+
     return (
         <div className="signup-wrapper">
             <h1 id='signup-title'>Airmail</h1>
