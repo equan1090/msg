@@ -10,7 +10,6 @@ import {actionCreators, State} from '../../state/index';
 export default function SignupPage() {
 
     const dispatch = useDispatch();
-    const { login, logout, authenticate, signUp } = bindActionCreators(actionCreators, dispatch)
     const [firstName, setFirstName] = useState<string>('');
     const [lastName, setLastName] = useState<string>('');
     const [emailAddress, setEmailAddress] = useState<string>('');
@@ -18,8 +17,10 @@ export default function SignupPage() {
     const [confirmPassword, setConfirmPassword] = useState<string>('');
     const [errors, setErrors] = useState<string[]>([]);
 
+
     const onSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
+        console.log('made it to the onsubmit');
         let errors: string[] = [];
         if (password !== confirmPassword) {
             errors.push('Passwords do not match');
@@ -33,7 +34,42 @@ export default function SignupPage() {
             return null;
         }
 
-        await dispatch(signUp(firstName, lastName, emailAddress, password)(dispatch));
+        try {
+            console.log('first name:', firstName)
+            console.log('last name:', lastName)
+            console.log('email address:', emailAddress)
+            console.log('password:', password)
+
+            const response = await fetch("/api/users/signup", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    firstName,
+                    lastName,
+                    emailAddress,
+                    password
+                }),
+            })
+
+            if (response.ok) {
+                setFirstName('');
+                setLastName('');
+                setEmailAddress('');
+                setPassword('');
+                setConfirmPassword('');
+                setErrors([]);
+            } else {
+                const errorData = await response.json();
+            }
+
+
+        } catch (error) {
+            console.error('An error occurred when registering:', error)
+        }
+
+
     }
 
 
@@ -51,28 +87,62 @@ export default function SignupPage() {
                 </Row>
                 <Row>
                     <Col>
-                        <Form>
+                        <Form onSubmit={onSubmit}>
                             <Row>
                                 <Col>
                                     <Form.Group controlId="Name" className="mb-3">
-                                        <Form.Control type="text" placeholder="First Name" />
+                                        <Form.Control type="text"
+                                                      placeholder="First Name"
+                                                      value={firstName}
+                                                      onChange={e => setFirstName(e.target.value)}
+
+                                        />
                                     </Form.Group>
                                 </Col>
                                 <Col>
                                     <Form.Group controlId="LastName" className="mb-3">
-                                        <Form.Control type="text" placeholder="Last Name" />
+                                        <Form.Control type="text"
+                                                      placeholder="Last Name"
+                                                      value={lastName}
+                                                      onChange={e => setLastName(e.target.value)}
+                                                      required
+                                        />
                                     </Form.Group>
                                 </Col>
                             </Row>
                             <Form.Group controlId="Email" className="mb-3">
-                                <Form.Control type="email" placeholder="Email" />
+                                <Form.Control type="email"
+                                              placeholder="Email"
+                                              value={emailAddress}
+                                              onChange={e => setEmailAddress(e.target.value)}
+                                              required
+                                />
                             </Form.Group>
                             <Form.Group controlId="Password" className="mb-3">
-                                <Form.Control type="password" placeholder="Password" />
+                                <Form.Control type="password"
+                                              placeholder="Password"
+                                                value={password}
+                                                onChange={e => setPassword(e.target.value)}
+                                              required
+
+                                />
                             </Form.Group>
                             <Form.Group controlId="ConfirmPassword" className="mb-3">
-                                <Form.Control type="password" placeholder="Confirm Password" />
+                                <Form.Control type="password"
+                                              placeholder="Confirm Password"
+                                                value={confirmPassword}
+                                                onChange={e => setConfirmPassword(e.target.value)}
+                                              required
+
+                                />
                             </Form.Group>
+                            <Row>
+                                <Col className="d-flex justify-content-center">
+                                    <Button variant="primary" type="submit" className="signup-button no-hover">
+                                        Sign Up
+                                    </Button>
+                                </Col>
+                            </Row>
                         </Form>
                     </Col>
                 </Row>
@@ -81,13 +151,7 @@ export default function SignupPage() {
                         <p id='signup-disclaimer'>People who use this application do not have to use their real information. This is just a simple application used to display my abilities as a full stack developer.</p>
                     </Col>
                 </Row>
-                <Row>
-                    <Col className="d-flex justify-content-center">
-                        <Button variant="primary" type="submit" className="signup-button no-hover">
-                            Sign Up
-                        </Button>
-                    </Col>
-                </Row>
+
                 <Row>
                     <Col className="d-flex justify-content-center">
                         <p id='signup-login'>Already have an account? <a href="/">Login</a></p>
