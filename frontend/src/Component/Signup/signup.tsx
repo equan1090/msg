@@ -15,10 +15,11 @@ export default function SignupPage() {
     const [emailAddress, setEmailAddress] = useState<string>('');
     const [password, setPassword] = useState<string>('');
     const [confirmPassword, setConfirmPassword] = useState<string>('');
-    const [errors, setErrors] = useState<string[]>([]);
+    const [error, setErrors] = useState<string[]>([]);
 
 
     const onSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+        console.log('in the onsubmit')
         event.preventDefault();
 
         let errors: string[] = [];
@@ -49,6 +50,7 @@ export default function SignupPage() {
             })
 
             if (response.ok) {
+                console.log('in the res.ok')
                 setFirstName('');
                 setLastName('');
                 setEmailAddress('');
@@ -57,8 +59,7 @@ export default function SignupPage() {
                 setErrors([]);
             } else {
                 const errorData = await response.json();
-                console.log('error data:', errorData);
-                setErrors([...errors, errorData]);
+                setErrors([errorData.error]);
             }
 
         } catch (error) {
@@ -133,6 +134,18 @@ export default function SignupPage() {
 
                                 />
                             </Form.Group>
+                            <Row>
+                                <Col>
+                                    {error.length > 0 && (
+                                        <div className="error-list">
+                                            {error.map((error, index) => (
+                                                <li key={index}>{error}</li>
+                                            ))}
+                                        </div>
+
+                                    )}
+                                </Col>
+                            </Row>
                             <Row>
                                 <Col className="d-flex justify-content-center">
                                     <Button variant="primary" type="submit" className="signup-button no-hover">

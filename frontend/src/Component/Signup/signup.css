@@ -57,3 +57,8 @@
 .no-hover:hover {
     background-color: #00a400;
 }
+.error-list {
+    list-style-type: none;
+    color: red;
+    text-align: center;
+}
