@@ -2,13 +2,15 @@ package com.equan.messenger.service;
 
 import com.equan.messenger.repository.UserRepository;
 import com.equan.messenger.model.User;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import java.util.List;
 @Service
 public class UserService {
 
-
+    BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
     private UserRepository userRepository;
     @Autowired
     public UserService(UserRepository userRepository) {
@@ -16,8 +18,16 @@ public class UserService {
     }
 
     public User saveUser(User user) {
-        System.out.println("this is my user inside service" + user);
-        return userRepository.save(user);
+
+        String hashedPassword = encoder.encode(user.getPassword());
+        user.setPassword(hashedPassword);
+        try {
+            return userRepository.save(user);
+        } catch (DuplicateKeyException ex) {
+            throw new DuplicateKeyException("Email address already exists");
+        }
+
+
     }
 
 }

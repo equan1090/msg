@@ -20,7 +20,7 @@ export default function SignupPage() {
 
     const onSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
-        console.log('made it to the onsubmit');
+
         let errors: string[] = [];
         if (password !== confirmPassword) {
             errors.push('Passwords do not match');
@@ -35,11 +35,6 @@ export default function SignupPage() {
         }
 
         try {
-            console.log('first name:', firstName)
-            console.log('last name:', lastName)
-            console.log('email address:', emailAddress)
-            console.log('password:', password)
-
             const response = await fetch("/api/users/signup", {
                 method: "POST",
                 headers: {
@@ -62,12 +57,14 @@ export default function SignupPage() {
                 setErrors([]);
             } else {
                 const errorData = await response.json();
+                console.log('error data:', errorData);
+                setErrors([...errors, errorData]);
             }
-
 
         } catch (error) {
             console.error('An error occurred when registering:', error)
         }
+
 
 
     }

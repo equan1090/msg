@@ -5,6 +5,7 @@ import com.equan.messenger.model.User;
 import com.equan.messenger.service.UserService;
 import org.springframework.web.bind.annotation.*;
 
+
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +25,6 @@ public class UserController {
 
     @PostMapping("/signup")
     public User signUp(@RequestBody User user) {
-        System.out.println("this is my user" + user);
         return userService.saveUser(user);
     }
 
