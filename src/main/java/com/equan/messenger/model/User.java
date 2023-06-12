@@ -18,16 +18,16 @@ public class User {
     private String lastName;
 
     @Indexed(unique = true) // This ensures that the email field has a unique index on it.
-    private String email;
+    private String emailAddress;
 
     private String password;
 
     // Manually added constructor for creating a user with only a subset of fields (excluding id).
-    public User(String firstName, String lastName, String email,
+    public User(String firstName, String lastName, String emailAddress,
                 String password) {
         this.firstName = firstName;
         this.lastName = lastName;
-        this.email = email;
+        this.emailAddress = emailAddress;
         this.password = password;
     }
 }
