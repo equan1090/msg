@@ -6,7 +6,7 @@ import org.springframework.dao.DuplicateKeyException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import java.util.List;
+
 @Service
 public class UserService {
 
@@ -24,9 +24,21 @@ public class UserService {
         try {
             return userRepository.save(user);
         } catch (DuplicateKeyException ex) {
+
             throw new DuplicateKeyException("Email address already exists");
         }
 
+
+    }
+
+    public User findUserByEmailAndPassword (String email, String password) {
+
+        User user = userRepository.findByEmailAddress(email);
+
+        if (user != null && encoder.matches(password, user.getPassword())) {
+            return user;
+        }
+        return null;
 
     }
 

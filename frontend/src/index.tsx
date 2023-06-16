@@ -4,7 +4,9 @@ import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import {Provider} from "react-redux";
-import {store} from "./state/index";
+import store from "./state/store";
+import {ApiProvider} from "@reduxjs/toolkit/dist/query/react";
+import {messengerApi} from "./state/apiSlice";
 
 const root = ReactDOM.createRoot(
     document.getElementById('root') as HTMLElement
@@ -12,7 +14,9 @@ const root = ReactDOM.createRoot(
 root.render(
     <React.StrictMode>
         <Provider store={store}>
-            <App />
+            <ApiProvider api={messengerApi}>
+                <App />
+            </ApiProvider>
         </Provider>
     </React.StrictMode>
 );

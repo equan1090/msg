@@ -2,8 +2,6 @@ import React, {useState} from 'react';
 import { Container, Row, Col, Form, Button } from 'react-bootstrap';
 import './signup.css';
 import {useDispatch} from "react-redux";
-import {bindActionCreators} from "@reduxjs/toolkit";
-import {actionCreators, State} from '../../state/index';
 
 
 
@@ -50,7 +48,6 @@ export default function SignupPage() {
             })
 
             if (response.ok) {
-                console.log('in the res.ok')
                 setFirstName('');
                 setLastName('');
                 setEmailAddress('');
