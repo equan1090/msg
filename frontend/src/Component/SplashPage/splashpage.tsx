@@ -8,12 +8,14 @@ import FloatingLabel from 'react-bootstrap/FloatingLabel';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 import {useLoginMutation} from "../../state/apiSlice";
-import {useDispatch} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
+import {login} from "../../state/auth/authReducer";
+
 
 export default function SplashPage(): JSX.Element {
     const [email, setEmail] = React.useState<string>('');
     const [password, setPassword] = React.useState<string>('');
-    const [login] = useLoginMutation();
+    const [loginMutation] = useLoginMutation();
     const dispatch = useDispatch();
 
     interface User {
@@ -24,14 +26,15 @@ export default function SplashPage(): JSX.Element {
         event.preventDefault();
         console.log('made it to handleSubmit')
         try {
-
             const credentials: User = {
                 emailAddress: email,
                 password: password
             }
             console.log('credentials', credentials);
-            const data = await login(credentials)
-            console.log('data', data);
+            const data = await loginMutation(credentials).unwrap();
+            dispatch(login(data));
+
+
         } catch{
             console.log('error')
         }

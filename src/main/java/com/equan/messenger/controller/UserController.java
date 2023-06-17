@@ -30,6 +30,12 @@ public class UserController {
     }
 
 
+    @GetMapping("/all")
+    public List<User> getAllUsers() {
+        return userService.getAllEntities();
+    }
+
+
     @PostMapping("/signup")
     public User signUp(@RequestBody User user) {
         return userService.saveUser(user);

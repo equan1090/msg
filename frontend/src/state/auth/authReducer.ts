@@ -1,4 +1,4 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { createSlice, PayloadAction, createAsyncThunk } from '@reduxjs/toolkit';
 
 interface User {
     firstName: string;
@@ -16,6 +16,7 @@ const initialState: AuthState = {
 
 };
 
+
 const authReducer = createSlice({
     name: 'auth',
     initialState,
@@ -25,7 +26,8 @@ const authReducer = createSlice({
         },
         logout(state) {
             state.user = null;
-        }
+        },
+
     },
 })
 export const {login, logout} = authReducer.actions;
